@@ -1,0 +1,84 @@
+body {
+  background: white;
+  padding-right: 0px !important;
+}
+
+header {
+  padding-right: 0px !important;
+}
+
+.ant-float-btn-group {
+  z-index: 99;
+}
+
+.MuiTooltip-tooltip {
+  background: #1976d2;
+}
+
+.ant-message {
+  margin-top: 60px;
+  .ant-descriptions-item-label {
+    min-width: 100px;
+  }
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 150px !important;
+  max-height: 150px !important;
+  padding: 10px;
+}
+
+.tags-input {
+  margin-bottom: 10px;
+}
+
+.custom-ant-form-item-required::before {
+  display: inline-block;
+  margin-inline-end: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  line-height: 1;
+  content: '*';
+}
+.mb {
+  .btn-space {
+    justify-content: start;
+  }
+}
+
+.custum-align-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pc {
+  .form-box {
+    display: flex;
+    justify-content: center;
+    .form-inform {
+      width: 100%;
+    }
+  }
+  .btn-space {
+    justify-content: end;
+  }
+}
+
+.pc-modal {
+  .book-inform-box {
+    display: flex;
+    flex-direction: row;
+    .book-thumb-img {
+      height: 600px;
+      width: 100%;
+    }
+    .book-inform-content {
+      padding: 20px;
+      width: 100%;
+    }
+  }
+}

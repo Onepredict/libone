@@ -1,0 +1,164 @@
+{
+  "auths": [
+    {
+      "id": 1,
+      "email": "yoonyoung.choi@onepredict.com"
+    },
+    {
+      "id": 2,
+      "email": "yoonyoung.choi2@onepredict.com"
+    },
+    {
+      "email": "yoonyoun11@onepredict.com",
+      "id": 4
+    },
+    {
+      "email": "sdfdsfe@onepredict.com",
+      "id": 5
+    },
+    {
+      "email": "wsresdrf234@onepredict.com",
+      "id": 6
+    },
+    {
+      "email": "12312321asd@onepredict.com",
+      "id": 7
+    }
+  ],
+  "books": [
+    {
+      "id": 1,
+      "title": "신라면",
+      "firstRegDate": "2023-01-11",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 5
+    },
+    {
+      "id": 4,
+      "title": "스파게티",
+      "firstRegDate": "2023-03-01",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 1
+    },
+    {
+      "id": 5,
+      "title": "피자",
+      "firstRegDate": "2023-02-11",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 7
+    },
+    {
+      "id": 6,
+      "title": "떡볶이",
+      "firstRegDate": "2023-01-03",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 15
+    },
+    {
+      "title": "컴포즈222",
+      "location": "A-10",
+      "firstRegDate": "2023/04/03",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 0,
+      "tags": ["커피"],
+      "path": "/uploads/2023040313203_MicrosoftTeams-image.png",
+      "id": 8
+    },
+    {
+      "title": "컴포즈",
+      "location": "A-10",
+      "firstRegDate": "2023/04/03",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 0,
+      "tags": ["커피"],
+      "path": "/uploads/20230403132039_MicrosoftTeams-image.png",
+      "id": 9
+    },
+    {
+      "title": "블랙보리",
+      "location": "A-30",
+      "firstRegDate": "2023/04/03",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 0,
+      "tags": ["음료"],
+      "path": "/uploads/20230403151353_bg.jpg",
+      "id": 10
+    },
+    {
+      "title": "아침식후30분",
+      "location": "B-30",
+      "firstRegDate": "2023/04/03",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 0,
+      "tags": ["약"],
+      "path": "/uploads/20230403151749_bg.jpg",
+      "id": 11
+    },
+    {
+      "title": "도서명 수정",
+      "location": "A-1000000",
+      "firstRegDate": "2023/04/03",
+      "rentable": "Y",
+      "status": "normal",
+      "lender": "yoonyoung.choi@onepredict.com",
+      "startRentDate": "2023/04/03",
+      "countRentals": 1,
+      "tags": ["테스트", "입니다"],
+      "path": "/uploads/20230403175613_title.png",
+      "originFileName": "title.png",
+      "id": 12
+    },
+    {
+      "title": "book mark",
+      "location": "a-110",
+      "firstRegDate": "2023/04/04",
+      "rentable": "Y",
+      "status": "normal",
+      "lender": "yoonyoung.choi@onepredict.com",
+      "startRentDate": "2023/04/05",
+      "countRentals": 1,
+      "tags": ["태그", "등록", "수정"],
+      "path": "/uploads/20230404135606_image.jpg",
+      "originFileName": "image.jpg",
+      "id": 13
+    },
+    {
+      "title": "임시",
+      "location": "ㅁㅁㅁ",
+      "firstRegDate": "2023/04/05",
+      "rentable": "N",
+      "status": "normal",
+      "lender": "",
+      "startRentDate": "",
+      "countRentals": 0,
+      "tags": ["태그"],
+      "path": "/uploads/20230405124707_image.jpg",
+      "originFileName": "image.jpg",
+      "id": 14
+    }
+  ]
+}
