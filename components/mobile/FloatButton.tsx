@@ -86,13 +86,13 @@ export default function FloatButtonComp({ isSpinning }: props) {
       ),
     },
     {
-      title: '반납',
+      title: '삭제',
       key: 'action',
       render: (record: AdminType) => (
         <Popconfirm
           placement="bottomRight"
-          title={'반납처리 하시겠습니까?'}
-          onConfirm={() => handleUpdateBookStatus(record)}
+          title={'삭제 처리 하시겠습니까?'}
+          onConfirm={() => handleDeleteAdminInformation(record)}
           okText="Yes"
           cancelText="No"
         >
@@ -108,7 +108,7 @@ export default function FloatButtonComp({ isSpinning }: props) {
 
   const [accountData, setAcountData] = useState<AdminType[] | undefined>()
 
-  const handleUpdateBookStatus = (record: AdminType) => {
+  const handleDeleteAdminInformation = (record: AdminType) => {
     const _id = record.id
     axios.delete(IP_ADDRESS + '/auths/' + _id).then((response) => {
       message.success('삭제가 완료되었습니다')
@@ -157,7 +157,7 @@ export default function FloatButtonComp({ isSpinning }: props) {
     } else {
       formData.email = formData.email + '@onepredict.com'
       axios.post(IP_ADDRESS + '/auths/', formData).then((response) => {
-        message.success('저장이 완료되었습니다.')
+        message.success('추가가 완료되었습니다.')
         getListOfAllAdminUser()
         form.resetFields()
       })
@@ -226,7 +226,7 @@ export default function FloatButtonComp({ isSpinning }: props) {
             onCancel={() => handleSetAuth(false)}
             onOk={AddAdminInformation}
             maskClosable={false}
-            okText={isModify ? '수정' : '신규'}
+            okText={isModify ? '수정' : '추가'}
             cancelText={'닫기'}
           >
             <div

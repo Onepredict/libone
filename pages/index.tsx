@@ -1,4 +1,5 @@
 import Main from '@/components/mobile/Main'
+import Head from 'next/head'
 
 type UserInfo = {
   username: string | undefined
@@ -13,5 +14,12 @@ type LayoutProps = {
 }
 
 export default function Home({ isLogin, userInfo, isSpinning }: LayoutProps) {
-  return <Main isLogin={isLogin} userInfo={userInfo} isSpinning={isSpinning} />
+  return (
+    <>
+      <Head>
+        <title>{"Libone - Onepredict's library"}</title>
+      </Head>
+      <Main isLogin={isLogin} userInfo={userInfo} isSpinning={isSpinning} />
+    </>
+  )
 }

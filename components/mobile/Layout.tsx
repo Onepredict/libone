@@ -106,15 +106,22 @@ export default function Layout({ children }: AppLayoutProps) {
   }
 
   const loginHandler = (err: unknown, data: unknown, msal: msal.PublicClientApplication | undefined) => {
+    const myAccounts = msalInstance.getAllAccounts()
     if (!err && msal) {
       setIsLogin(true)
       handleLoginEvent(true)
       onMsalInstanceChange(msal)
       handleMsalUserInfo(msal)
+    } else if (err && myAccounts.length > 0) {
+      setIsLogin(true)
+      handleLoginEvent(true)
+      onMsalInstanceChange(msalInstance)
+      handleMsalUserInfo(msalInstance)
     }
   }
 
   const logoutHandler = () => {
+    onMsalInstanceChange(new msal.PublicClientApplication(config))
     handleLoginEvent(false)
   }
 

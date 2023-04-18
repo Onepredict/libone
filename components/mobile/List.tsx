@@ -202,6 +202,9 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
               <Descriptions.Item label="도서명" span={isMobile ? 1 : 3} className="book-inform-data">
                 {bookInform ? bookInform.title : ''}
               </Descriptions.Item>
+              <Descriptions.Item label="위치" span={isMobile ? 1 : 3} className="book-inform-data">
+                {bookInform ? bookInform.location : ''}
+              </Descriptions.Item>
               <Descriptions.Item label="태그" span={isMobile ? 1 : 3} className="book-inform-data">
                 {bookInform ? tagChild : ''}
               </Descriptions.Item>

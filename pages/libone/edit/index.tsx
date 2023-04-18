@@ -118,6 +118,13 @@ export default function Insert({ isLogin, userInfo, isSpinning }: LayoutProps) {
   const [file, setFile] = useState<any>()
   const [fileList, setFileList] = useState<UploadFile[]>([])
 
+  const validateFormData = (formData: any) => {
+    let result = true
+    if (!file) result = false
+    if (!tags || tags.length === 0) result = false
+    return result
+  }
+
   const onFinish = (formData: any) => {
     const nowTime = moment().format('YYYY/MM/DD')
     const pathName = moment().format('YYYYMMDDHHmmss')
@@ -147,21 +154,25 @@ export default function Insert({ isLogin, userInfo, isSpinning }: LayoutProps) {
         })
       }
     } else {
-      const rename = pathName + '_' + file.name
-      formData.firstRegDate = nowTime
-      formData.rentable = 'N'
-      formData.status = 'normal'
-      formData.lender = ''
-      formData.startRentDate = ''
-      formData.countRentals = 0
-      formData.tags = tags
-      formData.path = '/uploads/' + rename
-      formData.originFileName = file.name
+      if (validateFormData(formData)) {
+        const rename = pathName + '_' + file.name
+        formData.firstRegDate = nowTime
+        formData.rentable = 'N'
+        formData.status = 'normal'
+        formData.lender = ''
+        formData.startRentDate = ''
+        formData.countRentals = 0
+        formData.tags = tags
+        formData.path = '/uploads/' + rename
+        formData.originFileName = file.name
 
-      const renameFile = changeFileName(file.originFileObj, rename)
-      axios.post(IP_ADDRESS + '/books/', formData).then((response) => {
-        handleUpload(response.data, renameFile)
-      })
+        const renameFile = changeFileName(file.originFileObj, rename)
+        axios.post(IP_ADDRESS + '/books/', formData).then((response) => {
+          handleUpload(response.data, renameFile)
+        })
+      } else {
+        message.error('필수 항목을 확인해 주세요.')
+      }
     }
   }
 
@@ -298,7 +309,7 @@ export default function Insert({ isLogin, userInfo, isSpinning }: LayoutProps) {
 
               <Space className="btn-space" align="start" style={{ marginTop: '20px', width: '100%' }}>
                 <Link key={'home'} href={'/'} prefetch={false} legacyBehavior>
-                  <Button>메인으로</Button>
+                  <Button>메인</Button>
                 </Link>
                 <Form.Item style={{ textAlign: 'right' }}>
                   <Popconfirm
@@ -308,7 +319,7 @@ export default function Insert({ isLogin, userInfo, isSpinning }: LayoutProps) {
                     okText="Yes"
                     cancelText="No"
                   >
-                    <Button type="primary">{isModify ? '수정하기' : '등록하기'}</Button>
+                    <Button type="primary">{isModify ? '수정' : '등록'}</Button>
                   </Popconfirm>
                 </Form.Item>
               </Space>
