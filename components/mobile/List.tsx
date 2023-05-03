@@ -8,6 +8,7 @@ import axios from 'axios'
 import FloatButtonComp from '@/components/mobile/FloatButton'
 import QRCode from 'qrcode.react'
 import { isBrowser } from 'react-device-detect'
+import type { PaginationProps } from 'antd'
 
 const { Search } = Input
 const IP_ADDRESS = process.env.NEXT_PUBLIC_SERVER_URL
@@ -74,6 +75,13 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
     }
   }, [])
 
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false)
+  useEffect(() => {
+    if (router.query.user === 'anonymous') {
+      setIsAnonymous(true)
+    }
+  }, [JSON.stringify(router.query)])
+
   const [bookListData, setBookListData] = useState<BookType[] | undefined>()
   const [searchText, setSearchText] = useState<string | ReadonlyArray<string> | number | undefined>('')
 
@@ -97,16 +105,21 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
   }
 
   useEffect(() => {
-    if (userInfo.homeAccountId !== '') {
-      if (router.query.text) {
-        getListOfAllBooks(String(router.query.text))
-        setSearchText(String(router.query.text))
-      } else {
-        getListOfAllBooks('')
-        setSearchText('')
+    if (!isAnonymous) {
+      if (userInfo.homeAccountId !== '') {
+        if (router.query.text) {
+          getListOfAllBooks(String(router.query.text))
+          setSearchText(String(router.query.text))
+        } else {
+          getListOfAllBooks('')
+          setSearchText('')
+        }
       }
+    } else {
+      getListOfAllBooks('')
+      setSearchText('')
     }
-  }, [userInfo, JSON.stringify(router.query)])
+  }, [userInfo, JSON.stringify(router.query), isAnonymous])
 
   const handleSearchText = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLTextAreaElement
@@ -154,6 +167,12 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
         }
       })
     }
+  }
+
+  const [pageSize, setPageSize] = useState(isBrowser ? 10 : 5)
+
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setPageSize(pageSize)
   }
 
   const blurDataUrl: string = '/empty.gif'
@@ -263,7 +282,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
       </Modal>
       <div
         style={{
-          height: 'calc(100vh - 106px)',
+          height: '100%',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -296,7 +315,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
                 dataSource={bookListData}
                 size="small"
                 rowKey={(render) => render.title + '_' + render.key}
-                pagination={{ pageSize: 5 }}
+                pagination={{ pageSize: pageSize, onShowSizeChange: onShowSizeChange, pageSizeOptions: [5, 10, 20, 50, 100] }}
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: (event) => {

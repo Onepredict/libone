@@ -48,6 +48,19 @@ canvas {
   }
 }
 
+.login-box {
+  .ant-spin-nested-loading {
+    height: 100%;
+    width: 100%;
+    .ant-spin-container {
+      height: 100%;
+    }
+    .ant-spin {
+      min-height: 100%;
+    }
+  }
+}
+
 .custum-align-center {
   display: flex;
   flex-direction: column;
@@ -80,5 +93,27 @@ canvas {
       padding: 20px;
       width: 100%;
     }
+  }
+}
+
+.fadein {
+  font-size: medium;
+  position: relative;
+  overflow: hidden;
+  animation: fadein 5s ease-in-out;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  50% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }

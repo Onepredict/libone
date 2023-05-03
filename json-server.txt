@@ -1,1 +1,1 @@
-json-server --host 10.10.70.89 --port 8000 --watch C:\workspace\libone\data\data\db.json 
+json-server --host 0.0.0.0 --port 8000 --watch /app/data/db.json 

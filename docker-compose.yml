@@ -1,0 +1,20 @@
+---
+version: '3'
+
+services:
+  libone:
+    image: libone
+    restart: always
+    volumes:
+      - C:\docker_bak\uploads:/app/public/uploads
+    depends_on:
+      - libone-json-server
+    ports:
+      - 7000:3000
+  libone-json-server:
+    image: clue/json-server
+    restart: always
+    volumes:
+      - C:\workspace\libone\data\data\db.json:/data/db.json
+    ports:
+      - 8000:80

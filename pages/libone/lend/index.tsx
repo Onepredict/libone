@@ -82,8 +82,8 @@ export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
   return (
     <div
       style={{
-        height: '100%',
-        marginTop: '60px',
+        height: 'calc(100vh - 106px)',
+        marginTop: '56px',
         padding: '20px',
       }}
     >

@@ -11,6 +11,8 @@ import QRCode from 'qrcode.react'
 import { isBrowser } from 'react-device-detect'
 import { textAlign } from '@mui/system'
 
+import type { PaginationProps } from 'antd'
+
 const { Search } = Input
 const IP_ADDRESS = process.env.NEXT_PUBLIC_SERVER_URL
 
@@ -29,6 +31,13 @@ type LayoutProps = {
 export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
   const router = useRouter()
   const [isMobile, setIsMobile] = useState(false)
+
+  const [isAnonymous, setIsAnonymous] = useState<boolean>(false)
+  useEffect(() => {
+    if (router.query.user === 'anonymous') {
+      setIsAnonymous(true)
+    }
+  }, [JSON.stringify(router.query)])
 
   useEffect(() => {
     if (!isBrowser) {
@@ -132,6 +141,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
   const [myBookData, setMyBookData] = useState<MyBookType[] | undefined>()
   const [newBookDate, setNewBookData] = useState<BookType[] | undefined>()
   const [bestBookDate, setBestBookData] = useState<BookType[] | undefined>()
+  const [bookListData, setBookListData] = useState<BookType[] | undefined>()
 
   const getListOfAllBooks = () => {
     axios.get(IP_ADDRESS + '/books?_sort=id&_order=desc').then((response) => {
@@ -139,6 +149,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
       const myBooks = []
       const newBooks = []
       const bestBooks = []
+      const bookList = []
       for (let i = 0; i < data.length; i++) {
         const today = new Date()
         const firstRegDate = new Date(data[i].firstRegDate)
@@ -148,17 +159,17 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
           const startRentDate = new Date(data[i].startRentDate)
           const diffRentSec = today.getTime() - startRentDate.getTime()
           const diffRentDate = Math.ceil(diffRentSec / (24 * 60 * 60 * 1000))
-          const book: MyBookType = {
+          const myBook: MyBookType = {
             key: i,
             title: data[i].title,
             period: `${diffRentDate}일`,
             data: data[i],
           }
-          myBooks.push(book)
+          myBooks.push(myBook)
         }
 
         if (diffDate <= 15) {
-          const book: BookType = {
+          const newBook: BookType = {
             key: i,
             title: data[i].title,
             rentable:
@@ -173,8 +184,16 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
               ),
             data: data[i],
           }
-          newBooks.push(book)
+          newBooks.push(newBook)
         }
+
+        const book: BookType = {
+          key: i,
+          title: data[i].title,
+          rentable: data[i].rentable === 'Y' ? <Tag color="red">대여중</Tag> : <Tag color="blue">대여가능</Tag>,
+          data: data[i],
+        }
+        bookList.push(book)
       }
 
       const sortData = data.sort((a: BookJsonDataType, b: BookJsonDataType) => b.countRentals - a.countRentals)
@@ -190,14 +209,19 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
       setMyBookData(myBooks)
       setNewBookData(newBooks)
       setBestBookData(bestBooks)
+      setBookListData(bookList)
     })
   }
 
   useEffect(() => {
-    if (userInfo.homeAccountId !== '') {
+    if (!isAnonymous) {
+      if (userInfo.homeAccountId !== '') {
+        getListOfAllBooks()
+      }
+    } else {
       getListOfAllBooks()
     }
-  }, [userInfo])
+  }, [userInfo, isAnonymous])
 
   const [bookInform, setBookInform] = useState<BookJsonDataType>()
   const [bookInformModalOpen, setBookInformModalOpen] = useState<boolean>(false)
@@ -246,6 +270,17 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
     }
   }
 
+  const [pageSizeMyBook, setPageSizeMyBook] = useState(5)
+  const [pageSizeNewBook, setPageSizeNewBook] = useState(5)
+
+  const onShowSizeChangeMyBook: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setPageSizeMyBook(pageSize)
+  }
+
+  const onShowSizeChangeNewBook: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setPageSizeNewBook(pageSize)
+  }
+
   const blurDataUrl: string = '/empty.gif'
 
   const forMap = (tag: string) => {
@@ -257,6 +292,12 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
     )
   }
   const tagChild = tags.map(forMap)
+
+  const [pageSize, setPageSize] = useState(isBrowser ? 10 : 5)
+
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setPageSize(pageSize)
+  }
 
   return (
     <>
@@ -363,83 +404,108 @@ export default function Main({ isLogin, userInfo, isSpinning }: LayoutProps) {
             }}
           >
             <Box className="mobile" sx={{ flexGrow: 1, height: '100%', width: '100%' }}>
-              <div
-                style={{
-                  height: '100%',
-                  background: 'white',
-                }}
-              >
-                <Box sx={{ my: 3 }} style={{ width: '100%', padding: '0 5%' }}>
-                  <Search
-                    placeholder="도서 검색"
-                    onSearch={(e) => {
-                      router.push(
-                        {
-                          pathname: '/libone/list',
-                          query: { text: e },
-                        },
-                        '/libone/list'
-                      )
+              <Box sx={{ my: 3 }} style={{ width: '100%', padding: '0 5%' }}>
+                <Search
+                  placeholder="도서 검색"
+                  onSearch={(e) => {
+                    router.push(
+                      {
+                        pathname: '/libone/list',
+                        query: { text: e },
+                      },
+                      '/libone/list'
+                    )
+                  }}
+                  enterButton
+                />
+              </Box>
+              <Box sx={{ my: 3 }} style={{ marginBottom: '0px', width: '100%', padding: '0 5%', height: '100%', overflowY: 'auto' }}>
+                {myBookData && myBookData.length > 0 ? (
+                  <>
+                    <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>MY 대여</div>
+                    <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
+                      <Table
+                        columns={myBookColumns}
+                        dataSource={myBookData}
+                        size="small"
+                        rowKey={(render) => render.title + '_' + render.key}
+                        pagination={{
+                          pageSize: pageSizeMyBook,
+                          onShowSizeChange: onShowSizeChangeMyBook,
+                          pageSizeOptions: [5, 10, 20, 50, 100],
+                        }}
+                      />
+                    </div>
+                    <Divider />
+                  </>
+                ) : (
+                  ''
+                )}
+                {newBookDate && newBookDate.length > 0 ? (
+                  <>
+                    <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>신규 도서</div>
+                    <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
+                      <Table
+                        columns={columns}
+                        dataSource={newBookDate}
+                        size="small"
+                        rowKey={(render) => render.title + '_' + render.key}
+                        pagination={{
+                          pageSize: pageSizeNewBook,
+                          onShowSizeChange: onShowSizeChangeNewBook,
+                          pageSizeOptions: [5, 10, 20, 50, 100],
+                        }}
+                        onRow={(record, rowIndex) => {
+                          return {
+                            onClick: (event) => {
+                              handleBookInformModal(record)
+                            }, // click row
+                          }
+                        }}
+                      />
+                    </div>
+                    <Divider />
+                  </>
+                ) : (
+                  ''
+                )}
+                <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>BEST 5</div>
+                <div style={{ padding: '20px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
+                  <Table
+                    columns={columns}
+                    dataSource={bestBookDate}
+                    size="small"
+                    rowKey={(render) => render.title + '_' + render.key}
+                    pagination={false}
+                    onRow={(record, rowIndex) => {
+                      return {
+                        onClick: (event) => {
+                          handleBookInformModal(record)
+                        }, // click row
+                      }
                     }}
-                    enterButton
                   />
-                </Box>
-                <Box sx={{ my: 3 }} style={{ width: '100%', padding: '0 5%' }}>
-                  {myBookData && myBookData.length > 0 ? (
-                    <>
-                      <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>MY 대여</div>
-                      <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
-                        <Table
-                          columns={myBookColumns}
-                          dataSource={myBookData}
-                          size="small"
-                          rowKey={(render) => render.title + '_' + render.key}
-                          pagination={{ pageSize: 2 }}
-                        />
-                      </div>
-                      <Divider />
-                    </>
-                  ) : (
-                    ''
-                  )}
-                  <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>신규 도서</div>
-                  <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
-                    <Table
-                      columns={columns}
-                      dataSource={newBookDate}
-                      size="small"
-                      rowKey={(render) => render.title + '_' + render.key}
-                      pagination={{ pageSize: 5 }}
-                      onRow={(record, rowIndex) => {
-                        return {
-                          onClick: (event) => {
-                            handleBookInformModal(record)
-                          }, // click row
-                        }
-                      }}
-                    />
-                  </div>
-                  <Divider />
-                  <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>BEST 5</div>
-                  <div style={{ padding: '20px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
-                    <Table
-                      columns={columns}
-                      dataSource={bestBookDate}
-                      size="small"
-                      rowKey={(render) => render.title + '_' + render.key}
-                      pagination={false}
-                      onRow={(record, rowIndex) => {
-                        return {
-                          onClick: (event) => {
-                            handleBookInformModal(record)
-                          }, // click row
-                        }
-                      }}
-                    />
-                  </div>
-                  <br />
-                </Box>
-              </div>
+                </div>
+                <Divider />
+                <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>도서 목록</div>
+                <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
+                  <Table
+                    columns={columns}
+                    dataSource={bookListData}
+                    size="small"
+                    rowKey={(render) => render.title + '_' + render.key}
+                    pagination={{ pageSize: pageSize, onShowSizeChange: onShowSizeChange, pageSizeOptions: [5, 10, 20, 50, 100] }}
+                    onRow={(record, rowIndex) => {
+                      return {
+                        onClick: (event) => {
+                          handleBookInformModal(record)
+                        }, // click row
+                      }
+                    }}
+                  />
+                </div>
+                <br />
+              </Box>
             </Box>
           </div>
           <FloatButtonComp isSpinning={handleSpinEvent} />
