@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Box, Button } from '@mui/material'
 import { Table, Input, Tag, Modal, Descriptions, message, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
@@ -82,7 +82,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
     }
   }, [JSON.stringify(router.query)])
 
-  const [bookListData, setBookListData] = useState<BookType[] | undefined>()
+  const [bookListData, setBookListData] = useState<BookType[] | undefined>([])
   const [searchText, setSearchText] = useState<string | ReadonlyArray<string> | number | undefined>('')
 
   const getListOfAllBooks = (text: string) => {
@@ -101,6 +101,15 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
         }
       }
       setBookListData(bookList)
+      if (bookList.length > 0) {
+        if (tableBoxRef.current) {
+          tableBoxRef.current.style.padding = '20px 10px 0px'
+        }
+      } else {
+        if (tableBoxRef.current) {
+          tableBoxRef.current.style.padding = '20px 10px'
+        }
+      }
     })
   }
 
@@ -186,6 +195,8 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
     )
   }
   const tagChild = tags.map(forMap)
+
+  const tableBoxRef = useRef<HTMLDivElement | null>(null)
 
   return (
     <>
@@ -309,7 +320,7 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
           </Box>
           <Box sx={{ my: 3 }} style={{ width: '100%', padding: '0 5%' }}>
             <div style={{ fontWeight: 'bold', marginBottom: '10px' }}>도서 목록</div>
-            <div style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
+            <div ref={tableBoxRef} style={{ padding: '20px 10px 0px 10px', background: 'whitesmoke', borderRadius: '20px' }}>
               <Table
                 columns={columns}
                 dataSource={bookListData}

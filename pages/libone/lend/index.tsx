@@ -35,7 +35,7 @@ interface BookJsonDataType {
 }
 
 export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
-  const [bookInfom, setBookInformation] = useState<BookJsonDataType>()
+  const [bookInform, setBookInformation] = useState<BookJsonDataType>()
   const [isRent, setIsRent] = useState<boolean>(true)
 
   const getBookInformation = (text: string) => {
@@ -53,18 +53,27 @@ export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
     })
   }
 
+  const [bookId, setBookId] = useState<string | undefined>()
+
   const handleUpdateBookStatus = () => {
-    const formData = { ...bookInfom }
+    const formData = { ...bookInform }
     const nowTime = moment().format('YYYY/MM/DD')
     const count = formData.countRentals ? formData.countRentals : 0
     formData.rentable = 'Y'
     formData.lender = userInfo.username
     formData.startRentDate = nowTime
     formData.countRentals = count + 1
-    axios.put(IP_ADDRESS + '/books/' + formData.id, formData).then((response) => {
-      message.success('성공적으로 대여됐습니다')
-      isSpinning(true)
-      Router.push('/')
+    axios.get(IP_ADDRESS + '/books/' + formData.id).then((res: any) => {
+      if (res.data.rentable === 'N') {
+        axios.put(IP_ADDRESS + '/books/' + formData.id, formData).then((response) => {
+          message.success('성공적으로 대여됐습니다')
+          isSpinning(true)
+          Router.push('/')
+        })
+      } else {
+        message.info('실패했습니다. 대여 여부를 다시 확인해 주세요.')
+        if (bookId) getBookInformation(bookId)
+      }
     })
   }
 
@@ -76,6 +85,7 @@ export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
     const URLSearch = new URLSearchParams(location.search)
     const _id = URLSearch.get('id')
     getBookInformation(String(_id))
+    setBookId(String(_id))
     isSpinning(false)
   }, [])
 
@@ -88,12 +98,19 @@ export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
       }}
     >
       <Descriptions bordered title="도서 대여" size={'middle'}>
-        <Descriptions.Item label="도서명">{bookInfom?.title}</Descriptions.Item>
+        <Descriptions.Item label="도서명">{bookInform?.title}</Descriptions.Item>
         <Descriptions.Item label="상태">
-          {bookInfom?.rentable === 'N' ? <Tag color="blue">대여가능</Tag> : <Tag color="red">대여중</Tag>}
+          {bookInform?.rentable === 'N' ? <Tag color="blue">대여가능</Tag> : <Tag color="red">대여중</Tag>}
         </Descriptions.Item>
-        <Descriptions.Item label="대여횟수">{bookInfom?.countRentals}</Descriptions.Item>
-        <Descriptions.Item label="등록일">{bookInfom?.firstRegDate}</Descriptions.Item>
+        {bookInform && String(bookInform.rentable) === 'Y' ? (
+          <Descriptions.Item label="대여자" className="book-inform-data">
+            {bookInform ? bookInform.lender.split('@')[0] : ''}
+          </Descriptions.Item>
+        ) : (
+          ''
+        )}
+        <Descriptions.Item label="대여횟수">{bookInform?.countRentals}</Descriptions.Item>
+        <Descriptions.Item label="등록일">{bookInform?.firstRegDate}</Descriptions.Item>
       </Descriptions>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'end', alignItems: 'center', marginTop: '15px', gap: '10px' }}>
         <Link key={'home'} href={'/'} prefetch={false} legacyBehavior>
