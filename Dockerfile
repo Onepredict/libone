@@ -32,9 +32,24 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/scheduler ./scheduler
 COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/server-next.js ./server-next.js
+
+RUN apk --no-cache add ca-certificates openssl curl bash procps coreutils
+# Set the locale to Korean (ko_KR.UTF-8)
+ENV LANG=ko_KR.UTF-8
+ENV LANGUAGE=ko_KR:ko
+ENV LC_ALL=ko_KR.UTF-8
+
+# Install Korean font package
+RUN apk --no-cache add fontconfig
+RUN apk --no-cache add --virtual .build-deps msttcorefonts-installer \
+    && update-ms-fonts \
+    && fc-cache -f \
+    && apk del .build-deps
 
 USER nextjs
 
 EXPOSE 7000
-CMD ["npm","run","start"]
+CMD ["npm", "run", "start"]

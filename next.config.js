@@ -1,14 +1,21 @@
 /** @type {import('next').NextConfig} */
+const withPWA = require('next-pwa')
+
 const nextConfig = {
   reactStrictMode: false,
-  webpack: (config, { isServer }) => {
-    // Fixes npm packages that depend on `fs` module
-    if (!isServer) {
-      config.resolve.fallback.fs = false
+  swcMinify: true,
+  // except for webpack, other parts are left as generated
+  webpack: (config, context) => {
+    config.watchOptions = {
+      poll: 1000,
+      aggregateTimeout: 300,
     }
-
     return config
   },
 }
+
+// module.exports = withPWA({
+//   dest: 'public',
+// })(nextConfig)
 
 module.exports = nextConfig

@@ -133,6 +133,7 @@ export default function FloatButtonComp({ isSpinning }: props) {
 
   const handleSetAuth = (flag: boolean) => {
     setAuthSetModalOpen(flag)
+    if (!flag) form.resetFields()
   }
 
   const AddAdminInformation = () => {

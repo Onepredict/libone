@@ -6,7 +6,7 @@ import MobileLayout from '../components/mobile/Layout'
 import Layout from '../components/desktop/Layout'
 import { isBrowser } from 'react-device-detect'
 import { useEffect, useState } from 'react'
-import { Button, Box, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isMobile, setIsMobile] = useState<boolean | null>(null)

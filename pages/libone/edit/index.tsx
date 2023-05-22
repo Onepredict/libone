@@ -301,6 +301,7 @@ export default function Insert({ isLogin, userInfo, isSpinning }: LayoutProps) {
                     maxCount={1}
                     onChange={(info) => handleFileList(info)}
                     onRemove={handleRemoveFile}
+                    action={'/api/noop'}
                   >
                     <Button icon={<UploadOutlined />}>Upload (Max: 1)</Button>
                   </Upload>

@@ -135,20 +135,26 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
     setSearchText(target.value)
   }
 
+  const blurDataUrl: string = '/empty.gif'
   const [bookInform, setBookInform] = useState<BookJsonDataType>()
   const [bookInformModalOpen, setBookInformModalOpen] = useState<boolean>(false)
   const [tags, setTags] = useState<string[]>([])
+  const [bookTitleImg, setBookTitleImg] = useState<string>(blurDataUrl)
 
   const handleBookInformModal = (record: BookType) => {
     const url = location.origin + '/libone/lend?id=' + record.data.id
     record.data.url = url
     setBookInform(record.data)
+    setBookTitleImg(`/api/public${record.data.path}`)
     setTags([...record.data.tags])
     setBookInformModalOpen(true)
   }
 
   const handleBookInformModalClose = () => {
-    setBookInformModalOpen(false)
+    setBookTitleImg(blurDataUrl)
+    setTimeout(() => {
+      setBookInformModalOpen(false)
+    }, 50)
   }
 
   const handleSpinEvent = (flag: boolean) => {
@@ -184,8 +190,6 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
     setPageSize(pageSize)
   }
 
-  const blurDataUrl: string = '/empty.gif'
-
   const forMap = (tag: string) => {
     const tagElem = <Tag color="purple">{'@' + tag}</Tag>
     return (
@@ -214,8 +218,8 @@ export default function Main({ isLogin, userInfo, isSpinning }: props) {
       >
         <div className="book-inform-box">
           <div className="custum-align-center book-thumb-img" style={{ padding: '20px' }}>
-            <Image
-              src={bookInform ? bookInform.path : blurDataUrl}
+            <img
+              src={bookTitleImg}
               alt="title"
               width={isMobile ? 220 : 440}
               height={isMobile ? 300 : 560}

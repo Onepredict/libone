@@ -77,7 +77,7 @@ export default function MobileLayout({ children }: AppLayoutProps) {
       const authUsers = response.data
       let checkedAuth: boolean = false
       for (let i = 0; i < authUsers.length; i++) {
-        if (text === 'undefined' || text === '' || authUsers[i].email.includes(text)) {
+        if (authUsers[i].email.includes(text)) {
           sessionStorage.setItem('auth', JSON.stringify({ admin: authUsers[i].email }))
           checkedAuth = true
           break

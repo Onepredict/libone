@@ -25,6 +25,13 @@
       "id": 7
     }
   ],
+  "user": [
+    {
+      "id": 1,
+      "email": "yoonyoung.choi@onepredict.com",
+      "subscribe": "{'endpoint':'https://fcm.googleapis.com/fcm/send/c4ixBWNXiO4:APA91bFDpXiIkNvmUAORn10S95n-m1fg6rV9ch8I-CkoBuMkznuikPQac5NCD0RC5t-Y3nrdMD9zJNWn6SQ-T7iCa7lxopZlNhlD0R4MsA06O82dILOZzjuewLk_eCrmL1-cjBECMRg6','expirationTime':null,'keys':{'p256dh':'BFHcJJm3GCF016949-9yOvYES7aXtduvCtzMKAHkKjRtRq1jW7IwbtClE2K14bDAV7p8Id-kMBJJIMz-FtoOv8w','auth':'PLOBSA6KX3QA0LH57pyRPQ'}}"
+    }
+  ],
   "books": [
     {
       "id": 2,

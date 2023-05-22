@@ -32,6 +32,7 @@ interface BookJsonDataType {
   imgUrl: string
   tags: Array<string>
   location: string
+  returnCheckYn: string
 }
 
 export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
@@ -60,6 +61,7 @@ export default function Lend({ isLogin, userInfo, isSpinning }: LayoutProps) {
     const nowTime = moment().format('YYYY/MM/DD')
     const count = formData.countRentals ? formData.countRentals : 0
     formData.rentable = 'Y'
+    formData.returnCheckYn = 'N'
     formData.lender = userInfo.username
     formData.startRentDate = nowTime
     formData.countRentals = count + 1

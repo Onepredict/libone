@@ -1,3 +1,7 @@
+const https = require('https')
+const fs = require('fs')
+const path = require('path')
+const _ = require('lodash')
 const jsonServer = require('json-server')
 
 const rewriteRules = {
@@ -6,7 +10,7 @@ const rewriteRules = {
 }
 
 const server = jsonServer.create()
-const router = jsonServer.router('/app/data/db.json')
+const router = jsonServer.router('db.json')
 const middlewares = jsonServer.defaults()
 server.use(middlewares)
 
@@ -26,6 +30,13 @@ server.use((req, res, next) => {
 server.use(jsonServer.rewriter(rewriteRules))
 server.use(router)
 
-server.listen(80, '0.0.0.0', () => {
-  console.log('Listening on port 80')
+const options = {
+  key: fs.readFileSync('./config/cert.key'),
+  cert: fs.readFileSync('./config/cert.crt'),
+}
+
+const httpsServer = https.createServer(options, server)
+
+httpsServer.listen(8000, '0.0.0.0', () => {
+  console.log('Listening on port 8000')
 })

@@ -2,8 +2,9 @@ FROM node:17-alpine
 RUN mkdir -p /app
 WORKDIR /app
 COPY . .
-RUN yarn add json-server
+RUN npm install json-server
+ADD . /app
 
 EXPOSE 8000
 
-CMD ["node","server.js"]
+CMD node server.js

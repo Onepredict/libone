@@ -57,6 +57,7 @@ export default function DesktopLayout({ children }: AppLayoutProps) {
   }
 
   const [child, setChild] = useState(cloneElement(children, { isLogin: isLogin, userInfo: userInfo, isSpinning: handleSpinEvent }))
+  const [isPermission, setIsPermission] = useState(false)
 
   useEffect(() => {
     if (isLogin) {
@@ -77,7 +78,7 @@ export default function DesktopLayout({ children }: AppLayoutProps) {
       const authUsers = response.data
       let checkedAuth: boolean = false
       for (let i = 0; i < authUsers.length; i++) {
-        if (text === 'undefined' || text === '' || authUsers[i].email.includes(text)) {
+        if (text !== '' && authUsers[i].email.includes(text)) {
           sessionStorage.setItem('auth', JSON.stringify({ admin: authUsers[i].email }))
           checkedAuth = true
           break
